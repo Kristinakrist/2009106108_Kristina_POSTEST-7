@@ -1,0 +1,107 @@
+<?php
+require 'config.php';
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Register</title>
+</head>
+<body>
+    <div class="container regis">
+
+        <div class="judul">
+            <h2>Registrasi</h2>
+        </div>
+        
+        <div class="form">
+            <form action="" method="post">
+                <label for="nama">Nama</label><br>
+                <input type="text" name="nama" class="input" placeholder="Masukkan nama"><br>
+
+                <label for="telepon">Telepon</label><br>
+                <input type="telepon" name="telepon" class="input" placeholder="Masukkan No_Telepon"><br>
+
+                <label for="username">Username</label><br>
+                <input type="text" name="username" class="input" placeholder="Masukkan username"><br>
+
+                <label for="tmpt_wsta">Tempat Wisata</label><br>
+                <input type="tempat wisata" name="tempat wisata" class="input" placeholder="Masukkan Tempat Wisata"><br>
+
+                <label for="konfirmasi">Konfirmasi Password</label><br>
+                <input type="password" name="konfirmasi" class="input" placeholder="Konfirmasi password"><br>
+
+                <input type="submit" name="regis" class="submit" value="Registrasi"><br><br>
+            </form>
+
+            <p>Sudah punya akun?
+                <a href="login.php">Login</a>
+            </p>
+        
+        </div>
+    </div>
+</body>
+</html>
+
+<?php
+
+require 'config.php';
+
+if(isset($_POST['regis'])){
+    $nama = $_POST['nama'];
+    $username = $_POST['username'];
+    $tmpt_wsta = $_POST['Tempat Wisata'];
+
+    $password = $_POST['password'];
+    $konfirmasi = $_POST['konfirmasi'];
+
+    $user = $db->query("SELECT * FROM akun WHERE username='$username'");
+    $num_user = mysqli_num_rows($user);
+
+    if($num_user > 0){
+        echo"
+            <script>
+                alert('username telah digunakan');
+            </script>
+        ";
+    }else{
+        if($password == $konfirmasi){
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            echo"
+            <script>
+                alert('password : $password');
+            </script>
+            ";
+            $query = "INSERT INTO akun (nama,telepon,username,tmpt_wsta,psw)
+                        VALUES ('$nama','$telepon','$username','$Tempat_Wisata','$password')";
+            $result = $db->query($query);
+
+            if($result){
+                echo"
+                    <script>
+                        alert('registrasi berhasil');
+                        document.location.href = 'index.php';
+                    </script>
+                    ";
+            }else{
+                echo"
+                    <script>
+                        alert('regis gagal');
+                    </script>
+                    ";
+            }
+            }else{
+                echo"
+                    <script>
+                        alert('Konfirmasi Password Salah');
+                    </script>
+                    ";
+        }
+    }
+}
+?>
